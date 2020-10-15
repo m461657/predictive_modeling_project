@@ -9,12 +9,15 @@ Non-linear predictive model?
 install packages
 ```{r}
 install.packages("tidytuesdayR")
+
+install.packages("ggpmisc")
 ```
 Load packages
 ```{r}
 library(tidyverse)
 library(readr)
 library(ggplot2)
+library(ggmisc)
 ```
 
 Import data
@@ -35,3 +38,85 @@ ggplot(data = friends_info, aes(x = air_date, y = us_views_millions))+
   geom_point()+
   geom_smooth(se = FALSE)
 ```
+
+#What is predictive modeling?
+**Predictive modeling** is the process of using known data and results, to create and analyze a model to predict future outcomes.
+
+The goal is to answer the question "What could possibly happen in the future?"
+
+# Linear predictive models
+
+There are a few different types of linear predictive models, but today I will talk about Simple Linear Regression and Multiple Regression.
+
+## Simple Linear Regression
+*ŷ = b0 + b1x*
+
+*ŷ* --> the predicted dependent variable
+*b0* --> the intercept of the line
+*x* --> the independent variable (the variable we are using to predict ŷ)
+*b1* --> the slope of the line
+
+This equation is the same as y=mx+b, just written using statistical terms instead
+The goal of linear regression, a linear predictive model, is to find the "line of best fit" by minimizing the squared error **more on that later**
+
+**have example of a linear model, graphed and with equation output**
+## Multiple Regression
+Can be both linear and non-linear
+It is very rare a dependent variable is only explained by *one* independent variable. So, we can use multiple regression instead!
+
+*ŷ = b0 + b1x1 + b2x2*
+
+*ŷ* = the predicted dependent variable
+*b0* = the intercept of the line
+*x1* = an independent variable
+*b1* = regression coefficient
+*x2* = another independent variable
+*b2* = another regression coefficient
+
+**have an example, graphed with equation output**
+
+# Measuring the Accuracy of a Linear Predictive Model
+
+There are multiple ways to measure the accuracy of a predictive model, based on the set of data you are given. The more accurate the model, the better it will do at predicting future events.
+**Correlation Coefficient**
+One very basic measurement of "fitness" for a model is the correlation coefficient. The correlation coefficient (r) is a measure of the strength of the linear relationship between two variables. It also gives the direction of the relationship (positive or negative).
+**Coefficient of Determination**
+Denoted as r^2, the coefficient of determination is interpreted as the proportion of the variance in the dependent variable(ŷ) that is predictable from the independent variable(s). That is, how much of ŷ is explained by the x('s). It is the square of the correlation coefficient.
+**Residuals**
+The residuals are the actual value, minus the predicted value, for each observation. The smaller the |residual| is, the closer that observation falls to the predictive model.
+
+*res = (Y-Yest)*
+*Y* = observed value
+*Yest* = predicted value
+
+**Have activity where they calculate the residuals**
+**Residual Standard Error**
+The residual standard error (or residual standard deviation) is the measure of the standard deviation of the residuals. The equation is:
+
+*Sres = sqrt[sum(Y-Yest)^2/n-2]*
+
+*Sres* --> residual standard deviation
+*Y* --> observed value
+*Yest* --> predicted value
+*n* --> number of observations
+
+All of these different methods can be used to compare models, and determine which model is the *best* predictive model! There are many other methods used to compare models, so these are just a few.
+  
+  **correlation matrix**
+  
+**go into group activity** 
+
+# Non-Linear Predictive Models
+
+Activity 1
+```{r}
+data_ex = data.frame("x" = c(2, 4, 6, 7), "y" = c(2.5, 6, 5, 4.5))
+
+ggplot(data = data_ex, aes(x = x, y = y))+
+  geom_point()+
+  stat_regline_quation(label.x = 1, label.y = 1)+
+  geom_smooth()
+```
+
+
+
