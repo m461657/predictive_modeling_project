@@ -17,7 +17,6 @@ Load packages
 library(tidyverse)
 library(readr)
 library(ggplot2)
-library(ggmisc)
 ```
 
 Import data
