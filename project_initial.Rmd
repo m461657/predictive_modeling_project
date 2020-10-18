@@ -17,6 +17,7 @@ Load packages
 library(tidyverse)
 library(readr)
 library(ggplot2)
+library(ggthemes)
 ```
 
 Import data
@@ -24,7 +25,39 @@ Import data
 friends <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-09-08/friends.csv')
 friends_emotions <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-09-08/friends_emotions.csv')
 friends_info <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-09-08/friends_info.csv')
+food_consumption <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-02-18/food_consumption.csv')
+
 ```
+
+```{r}
+#Simple LR model
+ggplot(data = Fish, aes(x = Length3, y = Weight))+
+  geom_point()+
+  geom_abline(aes(x = Length3, y = Weight), data = Fish, slope = 28.46, intercept = -490.40)
+
+lm1 = lm(Weight~Length3, data = Fish)
+
+#weight in g, length in cm
+```
+
+```{r}
+#MR model
+##for activity, have them compare all three models (one with l*w*h)
+
+lm2 = lm(Weight~Length3 + Height, data = Fish)
+
+lm3 = lm(Weight~Length3 + Height + Width, data = Fish)
+#coefficients of determination
+summary(lm1)$r.sq
+summary(lm2)$r.sq
+summary(lm3)$r.sq
+
+Fish_new = Fish %>% 
+  select(Weight, Length3, Height, Weight)
+
+cor(Fish_new)
+```
+
 
 ```{r}
 #View(friends)
@@ -89,6 +122,24 @@ The residuals are the actual value, minus the predicted value, for each observat
 *Yest* = predicted value
 
 **Have activity where they calculate the residuals**
+Activity 1
+```{r, eval = FALSE}
+data_ex = data.frame("x" = c(1, 2, 4, 6, 7), "y" = c(1, 2.5, 6, 5, 4.5))
+
+ggplot(data = data_ex, aes(x = x, y = y))+
+  geom_point(aes(color = "hotpink"), size = 3.5)+
+  geom_abline(mapping = NULL, data = NULL, slope = 1, intercept = 0, aes(color = "darkgray"), size = 1.5)+
+  scale_x_continuous(name = "", limits = c(0,8), breaks = c(0, 1, 2, 3, 4, 5, 6, 7, 8))+
+  scale_y_continuous(name = "", limits = c(0,8), breaks = c(0, 1, 2, 3, 4, 5, 6, 7, 8))+
+  theme_economist_white()+
+  theme(legend.position ="none")+
+  geom_text(label = "y = x", x = 4, y = 3.25, size = 7)+
+  geom_text(label = "(4,6)", x = 4, y = 6.5)+
+  geom_text(label = "(2,2.5)", x = 2, y = 3)+
+  geom_text(label = "(1,1)", x = 1, y = 1.5)+
+  geom_text(label = "(6,5)", x = 6, y = 4.5)+
+  geom_text(label = "(7,5)", x = 7, y = 5)
+```
 **Residual Standard Error**
 The residual standard error (or residual standard deviation) is the measure of the standard deviation of the residuals. The equation is:
 
@@ -107,15 +158,6 @@ All of these different methods can be used to compare models, and determine whic
 
 # Non-Linear Predictive Models
 
-Activity 1
-```{r}
-data_ex = data.frame("x" = c(2, 4, 6, 7), "y" = c(2.5, 6, 5, 4.5))
-
-ggplot(data = data_ex, aes(x = x, y = y))+
-  geom_point()+
-  stat_regline_quation(label.x = 1, label.y = 1)+
-  geom_smooth()
-```
 
 
 
