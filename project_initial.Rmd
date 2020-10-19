@@ -6,12 +6,8 @@ output: html_document
 What is a linear predictive model?
 Non-linear predictive model?
 
-install packages
-```{r}
-install.packages("tidytuesdayR")
+**TESTING AND TRAINING SETS!!**
 
-install.packages("ggpmisc")
-```
 Load packages
 ```{r}
 library(tidyverse)
@@ -21,43 +17,12 @@ library(ggthemes)
 ```
 
 Import data
-```{r}
+```{r, eval = FALSE}
 friends <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-09-08/friends.csv')
 friends_emotions <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-09-08/friends_emotions.csv')
 friends_info <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-09-08/friends_info.csv')
 food_consumption <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-02-18/food_consumption.csv')
-
 ```
-
-```{r}
-#Simple LR model
-ggplot(data = Fish, aes(x = Length3, y = Weight))+
-  geom_point()+
-  geom_abline(aes(x = Length3, y = Weight), data = Fish, slope = 28.46, intercept = -490.40)
-
-lm1 = lm(Weight~Length3, data = Fish)
-
-#weight in g, length in cm
-```
-
-```{r}
-#MR model
-##for activity, have them compare all three models (one with l*w*h)
-
-lm2 = lm(Weight~Length3 + Height, data = Fish)
-
-lm3 = lm(Weight~Length3 + Height + Width, data = Fish)
-#coefficients of determination
-summary(lm1)$r.sq
-summary(lm2)$r.sq
-summary(lm3)$r.sq
-
-Fish_new = Fish %>% 
-  select(Weight, Length3, Height, Weight)
-
-cor(Fish_new)
-```
-
 
 ```{r}
 #View(friends)
@@ -89,9 +54,29 @@ There are a few different types of linear predictive models, but today I will ta
 *b1* --> the slope of the line
 
 This equation is the same as y=mx+b, just written using statistical terms instead
-The goal of linear regression, a linear predictive model, is to find the "line of best fit" by minimizing the squared error **more on that later**
+The goal of linear regression, a linear predictive model, is to find the "line of best fit" by minimizing the squared error 
 
-**have example of a linear model, graphed and with equation output**
+### Example
+
+```{r}
+lm1 = lm(Weight~Length3, data = Fish)
+lm1
+```
+Our simple linear regression equation is:
+
+*Weight = -490.4 + 28.46(Length3)*
+
+So, our intercept is **-490.4** and our slope is **28.46**
+
+```{r}
+#Simple LR model
+ggplot(data = Fish, aes(x = Length3, y = Weight))+
+  geom_point(color = "mediumpurple4")+
+  geom_abline(aes(x = Length3, y = Weight), data = Fish, slope = 28.46, intercept = -490.40)+
+  labs(x = "Length (in cm)", y = "Weight (in g)", title = "Weight vs. Length of Fish")
+```
+
+
 ## Multiple Regression
 Can be both linear and non-linear
 It is very rare a dependent variable is only explained by *one* independent variable. So, we can use multiple regression instead!
@@ -105,9 +90,17 @@ It is very rare a dependent variable is only explained by *one* independent vari
 *x2* = another independent variable
 *b2* = another regression coefficient
 
-**have an example, graphed with equation output**
+### Example
+```{r}
+lm2 = lm(Weight~Length3 + Height, data = Fish)
+lm2
+```
+Our multiple regression equation is:
 
-# Measuring the Accuracy of a Linear Predictive Model
+*Weight = -501.1 + 25.24(Length3) + 12.14(Height)*
+
+
+# Measuring the Accuracy/"Fitness" of a Linear Predictive Model
 
 There are multiple ways to measure the accuracy of a predictive model, based on the set of data you are given. The more accurate the model, the better it will do at predicting future events.
 **Correlation Coefficient**
@@ -115,15 +108,14 @@ One very basic measurement of "fitness" for a model is the correlation coefficie
 **Coefficient of Determination**
 Denoted as r^2, the coefficient of determination is interpreted as the proportion of the variance in the dependent variable(ŷ) that is predictable from the independent variable(s). That is, how much of ŷ is explained by the x('s). It is the square of the correlation coefficient.
 **Residuals**
-The residuals are the actual value, minus the predicted value, for each observation. The smaller the |residual| is, the closer that observation falls to the predictive model.
+Residuals are the measure of how far away each point in a dataset is from the predicted model. The smaller the |residual| is, the closer that observation falls to the predictive model.
 
 *res = (Y-Yest)*
 *Y* = observed value
 *Yest* = predicted value
 
-**Have activity where they calculate the residuals**
-Activity 1
 ```{r, eval = FALSE}
+# Activity 1
 data_ex = data.frame("x" = c(1, 2, 4, 6, 7), "y" = c(1, 2.5, 6, 5, 4.5))
 
 ggplot(data = data_ex, aes(x = x, y = y))+
@@ -151,13 +143,58 @@ The residual standard error (or residual standard deviation) is the measure of t
 *n* --> number of observations
 
 All of these different methods can be used to compare models, and determine which model is the *best* predictive model! There are many other methods used to compare models, so these are just a few.
-  
-  **correlation matrix**
-  
-**go into group activity** 
+
+```{r}
+# Simple linear regression (lm1)
+lm1 = lm(Weight~Length3, data = Fish)
+lm1
+summary(lm1)$r.sq
+```
+
+```{r}
+# Multiple regression (lm2)
+lm2 = lm(Weight~Length3 + Height, data = Fish)
+lm2
+summary(lm2)$r.sq
+```
+
+```{r}
+# Multiple regression (lm3)
+lm3 = lm(Weight~Length3 + Height + Width, data = Fish)
+lm3
+summary(lm3)$r.sq
+```
+
+```{r, eval = FALSE}
+Fish_new = Fish %>% 
+  select(Weight, Length3, Height, Weight)
+```
+
+```{r}
+cor(Fish_new)
+```
+
 
 # Non-Linear Predictive Models
 
+There are many different kinds of non-linear predictive models. From logistic models, to log-least squares regression, and decision trees and random forests just to name a few. 
+
+## Decision Trees
+Decision trees are used for categorical variables. 
+
+# Euclidean Norm
+
+The equation for euclidean norm is:
+
+sqrt(∑(Ŷ-Y)^2)
+
+This equation is part of the mean squared error equation, which is another way to measure the accuracy and fitness of a predictive model. MSE tells you how close the regression line is to a set of data points. You take the distance the points are from the line, square them to remove any negatives, and then take the square root. You then take the sum of that value for all the points, and divide by the number of "Y's" you have.  
+
+The equation for mean square error is:
+
+(1/m)∑(Ŷ-Y)^2
+
+Ultimately, the MSE is the normalized euclidean distance. 
 
 
 
